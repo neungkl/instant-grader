@@ -6,9 +6,13 @@ enum FontStyle {
   Red = 2,
   White = 4,
   Bold = 8,
-  Normal = 16
+  Normal = 16,
+  Check = 32,
+  Cross = 64
 };
 
-void console(char*, int = (White | Normal));
+void console(const char*, int = (White | Normal));
+void consoleln(const char* = "", int = (White | Normal));
+void consoleSpliter(char);
 
 #endif

@@ -1,17 +1,19 @@
 #include "console.h"
 #include "grade.h"
 #include "config.h"
+#include <exception>
+
+using namespace std;
 
 void initConfig() {
-  setConf("test-delimiter",   "===");
-  setConf("inout-delimiter",  "---");
+  setConf(TEST_INPUT_DELIMITER,   "===");
+  setConf(TEST_OUTPUT_DELIMITER,  "---");
 
-  setConf("compile-lang", "c++");
+  setConf(LANGUAGE, "c++");
 
   // Set compiler command
-
-  setConf("compiler-c++",   "g++ -o %out %in");
-  setConf("compiler-c",     "gcc -o %out %in");
+  setConf(COMPILER_CPP,   "g++ -o %out %in");
+  setConf(COMPILER_C,     "gcc -o %out %in");
 }
 
 int main(int argc, char** argv) {
@@ -25,16 +27,27 @@ int main(int argc, char** argv) {
   }
 
   if(argc - argn == 0) {
-    console("Please enter specific file to run test.\n", Red | Bold);
-    console("For Example : ");
-    console("./grader add.cpp\n", Bold);
+    console("", Cross | Red | Bold);
+    consoleln(" Please enter specific file to run test.", Red | Bold);
+    console("For Example: ");
+    consoleln("./grader add.cpp", Bold);
   }
   else if(argc - argn == 1) {
     initConfig();
 
-    GradeStatus status = gradeFile(argv[argc - 1]);
+    try {
+      GradeStatus status = gradeFile(argv[argc - 1]);
 
-    //console(conf("compiler-c++"));
+      if(status == FileNotFound) {
+        console("  ", Cross);
+        console(argv[argc - 1], Bold);
+        consoleln(" does not exits.");
+      } else {
+
+      }
+    } catch (exception e) {
+      consoleln("Runtime Error.", Red | Bold);
+    }
   }
   else {
     console("This grader currently support only single file.\n", Red | Bold);

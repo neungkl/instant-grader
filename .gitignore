@@ -1,3 +1,6 @@
 # Build File
 build
 grader-build
+
+# Bin File
+bin/

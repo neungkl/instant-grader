@@ -3,7 +3,9 @@
 
 enum GradeStatus {
   Pass,
-  Reject
+  Reject,
+  FileNotFound,
+  CompileFailed
 };
 
 GradeStatus gradeFile(char*);
