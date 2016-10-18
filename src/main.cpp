@@ -27,9 +27,9 @@ int main(int argc, char** argv) {
   }
 
   if(argc - argn == 0) {
-    console("", Cross | Red | Bold);
-    consoleln(" Please enter specific file to run test.", Red | Bold);
-    console("For Example: ");
+    console("", Cross | Red);
+    consoleln(" Please enter specific file to run test.");
+    console("  For Example: ");
     consoleln("./grader add.cpp", Bold);
   }
   else if(argc - argn == 1) {
@@ -39,18 +39,24 @@ int main(int argc, char** argv) {
       GradeStatus status = gradeFile(argv[argc - 1]);
 
       if(status == FileNotFound) {
-        console("  ", Cross);
+        console(" ", Cross | Red);
         console(argv[argc - 1], Bold);
         consoleln(" does not exits.");
-      } else {
-
+      } else if(status == InputIsNotFile) {
+        console(" ", Cross | Red);
+        consoleln("Input file should not be directory.");
+      } else if(status == CompileFailed) {
+        console(" ", Cross | Red);
+        consoleln("compile error");
       }
     } catch (exception e) {
-      consoleln("Runtime Error.", Red | Bold);
+      console(" ", Cross | Red);
+      consoleln("Runtime Error.");
     }
   }
   else {
-    console("This grader currently support only single file.\n", Red | Bold);
+    console(" ", Cross | Red);
+    consoleln("argument is invalid.");
   }
 
   return 0;

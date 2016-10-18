@@ -1,18 +1,24 @@
 #ifndef console_h
 #define consele_h
 
+#include "global.h"
+#include <cstdio>
+
 enum FontStyle {
   Green = 1,
   Red = 2,
   White = 4,
-  Bold = 8,
-  Normal = 16,
-  Check = 32,
-  Cross = 64
+  Grey = 8,
+  Bold = 16,
+  Normal = 32,
+  Check = 64,
+  Cross = 128
 };
 
 void console(const char*, int = (White | Normal));
 void consoleln(const char* = "", int = (White | Normal));
-void consoleSpliter(char);
+void consoleSpliter(char, int = DEFAULT_SPLITTER_WIDTH, int = (White | Normal));
+
+void consoleFile(FILE*);
 
 #endif

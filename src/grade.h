@@ -5,7 +5,9 @@ enum GradeStatus {
   Pass,
   Reject,
   FileNotFound,
-  CompileFailed
+  CompileFailed,
+  InputIsNotFile,
+  Error
 };
 
 GradeStatus gradeFile(char*);
