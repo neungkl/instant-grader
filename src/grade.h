@@ -1,15 +1,14 @@
 #ifndef grade_h
 #define grade_h
 
-enum GradeStatus {
+enum GraderStatus {
   Pass,
-  Reject,
   FileNotFound,
   CompileFailed,
   InputIsNotFile,
   Error
 };
 
-GradeStatus gradeFile(char*);
+GraderStatus gradeFile(char*);
 
 #endif

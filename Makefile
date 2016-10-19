@@ -2,6 +2,7 @@ CC := g++
 CFLAGS := -g -Wno-write-strings -Wno-nonnull -std=c++11
 TARGET := ./build
 SOURCE := ./src
+TEST := ./test
 OUTPUT_NAME := grader-build
 
 SRCS := $(wildcard $(SOURCE)/*.cpp)
@@ -23,4 +24,10 @@ $(TARGET)/%.o: $(SOURCE)/%.cpp
 clean:
 	@rm -rf $(TARGET) *.o
 
-.PHONY: all clean
+test: $(filter-out $(TARGET)/main.o, $(OBJS))
+	@$(CC) $(CFLAGS) -c $(TEST)/test.cpp -o $(TEST)/test.o
+	@$(CC) $(CFLAGS) $^ $(TEST)/test.o -o $(TEST)/test
+	@$(TEST)/test
+	@rm $(TEST)/test.o
+
+.PHONY: all clean test

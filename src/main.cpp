@@ -1,7 +1,8 @@
 #include "console.h"
 #include "grade.h"
 #include "config.h"
-#include <exception>
+#include <stdexcept>
+#include <cstring>
 
 using namespace std;
 
@@ -9,54 +10,81 @@ void initConfig() {
   setConf(TEST_INPUT_DELIMITER,   "===");
   setConf(TEST_OUTPUT_DELIMITER,  "---");
 
-  setConf(LANGUAGE, "c++");
+  setConf(CLI_VERBOSE, false);
 
   // Set compiler command
-  setConf(COMPILER_CPP,   "g++ -o %out %in");
-  setConf(COMPILER_C,     "gcc -o %out %in");
+  setCompileCmd("c",    "gcc -o %out %in");
+  setCompileCmd("c++",  "g++ -o %out %in");
+  setCompileCmd("java", "javac -d %bin %in");
+
+  setRunCmd("java", "java -classpath %progd %progx < %in > %out");
 }
 
-int main(int argc, char** argv) {
+bool readParamter(int &argn, int argc, char** argv) {
+  while(argn < argc) {
 
-  int argn = 1;
-
-  while(true && argn < argc) {
-    break;
+    if(strcmp(argv[argn], "-v") == 0) {
+      setConf(CLI_VERBOSE, true);
+    }
+    else {
+      break;
+    }
 
     ++argn;
   }
 
-  if(argc - argn == 0) {
+  return true;
+}
+
+int main(int argc, char** argv) {
+
+  initConfig();
+
+  int argn = 1;
+  int fileIndex = -1;
+
+  if(argc == 1) {
     console("", Cross | Red);
     consoleln(" Please enter specific file to run test.");
     console("  For Example: ");
     consoleln("./grader add.cpp", Bold);
-  }
-  else if(argc - argn == 1) {
-    initConfig();
+  } else {
+    int isParamValid = true;
 
-    try {
-      GradeStatus status = gradeFile(argv[argc - 1]);
+    isParamValid = isParamValid && readParamter(argn, argc, argv);
 
-      if(status == FileNotFound) {
-        console(" ", Cross | Red);
-        console(argv[argc - 1], Bold);
-        consoleln(" does not exits.");
-      } else if(status == InputIsNotFile) {
-        console(" ", Cross | Red);
-        consoleln("Input file should not be directory.");
-      } else if(status == CompileFailed) {
-        console(" ", Cross | Red);
-        consoleln("compile error");
-      }
-    } catch (exception e) {
+    fileIndex = argn++;
+
+    isParamValid = isParamValid && readParamter(argn, argc, argv);
+
+    if(!isParamValid) {
       console(" ", Cross | Red);
-      consoleln("Runtime Error.");
+      consoleln("argument is invalid.");
+    } else if((fileIndex < argc - 1 && argn == argc) || fileIndex == argc - 1) {
+      try {
+        GraderStatus status = gradeFile(argv[fileIndex]);
+
+        if(status == FileNotFound) {
+          console(" ", Cross | Red);
+          console(argv[fileIndex], Bold);
+          consoleln(" does not exits.");
+        } else if(status == InputIsNotFile) {
+          console(" ", Cross | Red);
+          consoleln("Input file should not be directory.");
+        } else if(status == CompileFailed) {
+          console(" ", Cross | Red);
+          consoleln("compile error");
+        }
+      } catch (runtime_error e) {
+        consoleln(e.what());
+        console(" ", Cross | Red);
+        consoleln("Runtime Error.");
+      }
+
+    } else {
+      console(" ", Cross | Red);
+      consoleln("argument is invalid.");
     }
-  }
-  else {
-    console(" ", Cross | Red);
-    consoleln("argument is invalid.");
   }
 
   return 0;

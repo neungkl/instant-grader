@@ -3,48 +3,18 @@
 #include "console.h"
 #include "compare.h"
 #include "global.h"
+#include "util.h"
 #include <cstring>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <exception>
 #include <cstdlib>
+
 #include <cstdio>
 
-using namespace std;
-
-char* binFileInput  = "./bin/%d.in";
-char* binFileOutput = "./bin/%d.out";
-char* binFileAnswer = "./bin/%d.ans";
-
-/*
-  Compare the head of given content with head parameter
-  @param content content to compare
-  @param head head string
-  @return boolean
-*/
-bool isHeadEqual(char* content, char* head) {
-  for(int i=0; head[i] != '\0'; ++i) {
-    if(head[i] != content[i]) return false;
-  }
-  return true;
-}
-
-/*
-  Create file handler
-  @param fileName current file name
-  @param access access context of the file
-  @return FILE pointer
-*/
-FILE* createFileHandler(char* fileName, char* access) {
-    FILE* handler = fopen(fileName, access);
-
-    if(handler == NULL) {
-      perror("fopen");
-      throw exception();
-    }
-
-    return handler;
-}
+char* binName = "./bin";
+char* binFileInput  = "%bin/%d.in";
+char* binFileOutput = "%bin/%d.out";
+char* binFileAnswer = "%bin/%d.ans";
 
 /*
   Create file handler with specific given test case number
@@ -54,8 +24,8 @@ FILE* createFileHandler(char* fileName, char* access) {
   @return FILE pointer
 */
 FILE* createFileHandlerWithTestCase(char* fileName, char* access, int testCaseNumber) {
-  char testCaseFileName[strlen(fileName) + 5];
-  sprintf(testCaseFileName, fileName, testCaseNumber);
+  char* testCaseFileName = strReplace(fileName, "%bin", binName);
+  testCaseFileName = strReplace(testCaseFileName, "%d", toString(testCaseNumber));
   return createFileHandler(testCaseFileName, access);
 }
 
@@ -136,92 +106,51 @@ int splitTestCase(FILE* pFile) {
   @param in input string to replace %in
   @param out output string to replace %out
 */
-void generateCompileMsg(char* &cstr, char* in, char* out) {
-
-  int len = 0;
-
-  int argvCount = 0;
-  int maxLen = 0;
-
-  for(int i=0; ; ++i) {
-    if(cstr[i] == ' ' || cstr[i] == '\0') {
-      if(++len > maxLen) maxLen = len;
-      len = 0;
-      ++argvCount;
-
-      if(cstr[i] == '\0') break;
-    }
-    else {
-      ++len;
-    }
-  }
-
-  char tmp[maxLen];
-  int index = 0;
-  int newLen = 0;
-  len = 0;
-
-  char** argv = new char*[argvCount];
-
-  for(int i=0; ; ++i) {
-    if(cstr[i] == ' ' || cstr[i] == '\0') {
-      tmp[len++] = '\0';
-
-      if(strcmp(tmp,"%in") == 0) {
-        argv[index] = new char[strlen(in)];
-        sprintf(argv[index], "%s ", in);
-      }
-      else if(strcmp(tmp, "%out") == 0) {
-        argv[index] = new char[strlen(out)];
-        sprintf(argv[index], "%s ", out);
-      }
-      else {
-        argv[index] = new char[len];
-        sprintf(argv[index], "%s ", tmp);
-      }
-      ++index;
-
-      newLen += len;
-
-      len = 0;
-
-      if(cstr[i] == '\0') break;
-    } else {
-      tmp[len++] = cstr[i];
-    }
-  }
-
-  cstr = new char[newLen];
-  strcpy(cstr, "");
-
-  for(int i=0; ; ++i) {
-    if(argv[i] == NULL) break;
-    strcat(cstr, argv[i]);
-  }
+void generateCompileMsg(char* &cstr, char* in, char* inx, char* out) {
+  cstr = strReplace(cstr, "%inx", inx);
+  cstr = strReplace(cstr, "%out", out);
+  cstr = strReplace(cstr, "%in", in);
+  cstr = strReplace(cstr, "%bin", binName);
 }
 
 /*
   Remove extension form file name (for generating execute program name)
   @param fileName file name to remove extension
-  @return file name that already exclude extension
+  @return array of 1) file name and 2) extension
 */
-char* excludeExtension(char* fileName) {
+char** splitFileExtension(char* fileName) {
 
-  int len, i;
-  len = i = strlen(fileName);
-  char* newName = new char[len];
+  char** result = new char*[2];
 
-  for(--i; fileName[i] != '.'; --i);
-  --i;
+  int i,j;
+  int len, first, last;
+  len = strlen(fileName);
 
-  if(i < 0) i = len - 1;
+  result[0] = new char[len];
+  result[1] = new char[len];
 
-  newName[i + 1] = '\0';
-  for(; i >= 0; --i) {
-    newName[i] = fileName[i];
+  first = -1;
+  for(i = 0; i < len; ++i) {
+    if(fileName[i] == '/') first = i + 1;
   }
 
-  return newName;
+  if(first == -1) first = 0;
+
+  for(last = len - 1; fileName[last] != '.' && last >= first; --last);
+
+  if(last < first) {
+    result[1][0] = '\0';
+    last = len;
+  }
+
+  for(i = last + 1, j = 0; i < len; ++i, ++j) result[1][j] = fileName[i];
+  result[1][len - 1 - last] = '\0';
+
+  last = last - 1;
+  for(i = first, j = 0; i <= last; ++i, ++j) result[0][j] = fileName[i];
+  result[0][j] = '\0';
+
+  return result;
 }
 
 /*
@@ -230,18 +159,11 @@ char* excludeExtension(char* fileName) {
   @param out Output file of executable program
   @return status code of compile
 */
-int compileCode(char* in, char* out) {
-  char* compileStr = NULL;
+int compileCode(char* in, char* inx, char* out) {
 
-  char* lang = conf(LANGUAGE);
+  char* compileStr = getCompileCmd(conf(LANGUAGE));
 
-  if(strcmp(lang, "c++") == 0) {
-    compileStr = conf(COMPILER_CPP);
-  } else if(strcmp(lang, "c") == 0) {
-    compileStr = conf(COMPILER_C);
-  }
-
-  generateCompileMsg(compileStr, in, out);
+  generateCompileMsg(compileStr, in, inx, out);
 
   console("Compile: ", Bold);
   consoleln(compileStr, Bold);
@@ -254,10 +176,13 @@ int compileCode(char* in, char* out) {
   @param programFile the executable run file
   @param numberOfTest number of test
 */
-void runTest(char* programFile, int numberOfTest) {
-  char fileInputName[MAX_NAME_LEN];
-  char fileAnswerName[MAX_NAME_LEN];
-  char runCommand[MAX_NAME_LEN];
+void runTest(char* programPath, char* programName, int numberOfTest) {
+  char* fileInputName;
+  char* fileAnswerName;
+  char* runCommand;
+
+  char* programFile;
+  sprintf(programFile, "%s%s", programPath, programName);
 
   const int subSplitterWidth = 20;
 
@@ -265,20 +190,33 @@ void runTest(char* programFile, int numberOfTest) {
 
   char logs[MAX_NAME_LEN];
 
+  bool isVerbose = confi(CLI_VERBOSE);
+
+  if(strcmp(getRunCmd(conf(LANGUAGE)), getRunCmd("c")) != 0) {
+    consoleln(strReplace("Run with command: %s", "%s", getRunCmd(conf(LANGUAGE))), Bold);
+  }
+
   for(int N = 1; N <= numberOfTest; ++N) {
-    sprintf(fileInputName , binFileInput , N);
-    sprintf(fileAnswerName, binFileAnswer, N);
+    fileInputName = strReplace(binFileInput, "%bin", binName);
+    fileInputName = strReplace(fileInputName, "%d", toString(N));
 
-    sprintf(logs, "Run case: %d ", N);
-    console(logs);
+    fileAnswerName = strReplace(binFileAnswer, "%bin", binName);
+    fileAnswerName = strReplace(fileAnswerName, "%d", toString(N));
 
-    sprintf(runCommand, "%s < %s > %s", programFile, fileInputName, fileAnswerName);
+    console(strReplace("Run case: %d ", "%d", toString(N)));
+
+    runCommand = getRunCmd(conf(LANGUAGE));
+    runCommand = strReplace(runCommand, "%progd", programPath);
+    runCommand = strReplace(runCommand, "%progx", programName);
+    runCommand = strReplace(runCommand, "%prog", programFile);
+    runCommand = strReplace(runCommand, "%in", fileInputName);
+    runCommand = strReplace(runCommand, "%out", fileAnswerName);
+
     int status = system(runCommand);
 
     if(status != 0) {
       console("Error: ", Red | Bold);
-      sprintf(logs, "You program exit with status code %d", status);
-      consoleln(logs);
+      consoleln(strReplace(logs, "You program exit with status code %d", toString(status)));
       break;
     }
 
@@ -294,10 +232,12 @@ void runTest(char* programFile, int numberOfTest) {
 
       fin = createFileHandlerWithTestCase(binFileInput, "r", N);
 
-      consoleSpliter('-', subSplitterWidth, Grey);
-      consoleFile(fin);
-      consoleSpliter('-', subSplitterWidth, Grey);
-      consoleFile(fout);
+      if(isVerbose) {
+        consoleSpliter('-', subSplitterWidth, Grey);
+        consoleFile(fin);
+        consoleSpliter('-', subSplitterWidth, Grey);
+        consoleFile(fout);
+      }
     } else {
       console(" ", Cross | Red | Bold);
       consoleln("Rejected", Red | Bold);
@@ -317,7 +257,7 @@ void runTest(char* programFile, int numberOfTest) {
     fclose(fout);
     fclose(fans);
 
-    if( N < numberOfTest ) consoleSpliter('=', 40);
+    if( N < numberOfTest && (!pass || isVerbose) ) consoleSpliter('-', 40);
   }
 
 }
@@ -327,19 +267,19 @@ void runTest(char* programFile, int numberOfTest) {
   @param fileName file to grade
   @return status of grading
 */
-GradeStatus gradeFile(char* fileName) {
+GraderStatus gradeFile(char* fileNamePath) {
 
-  GradeStatus status = Pass;
+  GraderStatus status = Pass;
 
   struct stat fileInfo;
 
-  if( stat(fileName, &fileInfo) != 0 ) {
+  if( stat(fileNamePath, &fileInfo) != 0 ) {
     return FileNotFound;
   } else if(fileInfo.st_mode & S_IFDIR) {
     return InputIsNotFile;
   }
 
-  FILE *pFile = fopen(fileName, "r");
+  FILE *pFile = fopen(fileNamePath, "r");
 
   if(pFile != NULL) {
 
@@ -349,11 +289,17 @@ GradeStatus gradeFile(char* fileName) {
     numberOfTest = splitTestCase(pFile);
     fclose(pFile);
 
-    /* Compile the code */
-    char* programFileName;
-    sprintf(programFileName, "./bin/%s", excludeExtension(fileName));
+    char** fileNameSplit = splitFileExtension(fileNamePath);
+    char* fileNameWOExtension = fileNameSplit[0];
+    char* extension = fileNameSplit[1];
 
-    int compileStatus = compileCode(fileName, programFileName);
+    setLanguage(extension);
+
+    /* Compile the code */
+    char* programFileName = strReplace("%bin/%s", "%bin", binName);
+    programFileName = strReplace(programFileName, "%s", fileNameWOExtension);
+
+    int compileStatus = compileCode(fileNamePath, fileNameWOExtension, programFileName);
 
     if(compileStatus != 0) {
       return CompileFailed;
@@ -366,7 +312,7 @@ GradeStatus gradeFile(char* fileName) {
     consoleSpliter('=', 40);
 
     /* Run code with all test files */
-    runTest(programFileName, numberOfTest);
+    runTest(strReplace("%s/", "%s", binName), fileNameWOExtension, numberOfTest);
     consoleln();
 
   } else {

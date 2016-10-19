@@ -4,3 +4,9 @@ grader-build
 
 # Bin File
 bin/
+
+# Test File
+test/test
+
+# Other File
+*.o
