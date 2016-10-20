@@ -106,10 +106,10 @@ int splitTestCase(FILE* pFile) {
   @param in input string to replace %in
   @param out output string to replace %out
 */
-void generateCompileMsg(char* &cstr, char* in, char* inx, char* out) {
-  cstr = strReplace(cstr, "%inx", inx);
-  cstr = strReplace(cstr, "%out", out);
-  cstr = strReplace(cstr, "%in", in);
+void generateCompileMsg(char* &cstr, char* code, char* codex, char* prog) {
+  cstr = strReplace(cstr, "%codex", codex);
+  cstr = strReplace(cstr, "%code", code);
+  cstr = strReplace(cstr, "%prog", prog);
   cstr = strReplace(cstr, "%bin", binName);
 }
 
@@ -181,19 +181,23 @@ void runTest(char* programPath, char* programName, int numberOfTest) {
   char* fileAnswerName;
   char* runCommand;
 
-  char* programFile;
-  sprintf(programFile, "%s%s", programPath, programName);
+  char* programFile = strReplace("pathname", "path", programPath);
+  programFile = strReplace(programFile, "name", programName);
 
   const int subSplitterWidth = 20;
 
   FILE *fin, *fout, *fans;
 
-  char logs[MAX_NAME_LEN];
-
   bool isVerbose = confi(CLI_VERBOSE);
 
   if(strcmp(getRunCmd(conf(LANGUAGE)), getRunCmd("c")) != 0) {
-    consoleln(strReplace("Run with command: %s", "%s", getRunCmd(conf(LANGUAGE))), Bold);
+
+    runCommand = getRunCmd(conf(LANGUAGE));
+    runCommand = strReplace(runCommand, "%progd", programPath);
+    runCommand = strReplace(runCommand, "%progx", programName);
+    runCommand = strReplace(runCommand, "%prog", programFile);
+
+    consoleln(strReplace("Run with command: %s", "%s", runCommand), Bold);
   }
 
   for(int N = 1; N <= numberOfTest; ++N) {
@@ -215,8 +219,13 @@ void runTest(char* programPath, char* programName, int numberOfTest) {
     int status = system(runCommand);
 
     if(status != 0) {
+      console(" ", Cross | Red | Bold);
+      consoleln("Rejected", Red | Bold);
+
+      consoleln();
       console("Error: ", Red | Bold);
-      consoleln(strReplace(logs, "You program exit with status code %d", toString(status)));
+      consoleln(strReplace("You program exit with status code %d", "%d", toString(status)));
+      if(status > 35000) consoleln("Maybe stack overflow or using too much memory.");
       break;
     }
 
@@ -297,22 +306,34 @@ GraderStatus gradeFile(char* fileNamePath) {
 
     /* Compile the code */
     char* programFileName = strReplace("%bin/%s", "%bin", binName);
-    programFileName = strReplace(programFileName, "%s", fileNameWOExtension);
 
-    int compileStatus = compileCode(fileNamePath, fileNameWOExtension, programFileName);
+    consoleln();
 
-    if(compileStatus != 0) {
-      return CompileFailed;
+    // Compile when there has compile message
+    if(strcmp(getCompileCmd(conf(LANGUAGE)),"") != 0) {
+
+      programFileName = strReplace(programFileName, "%s", fileNameWOExtension);
+
+      int compileStatus = compileCode(fileNamePath, fileNameWOExtension, programFileName);
+
+      if(compileStatus != 0) {
+        return CompileFailed;
+      } else {
+        console(" ", Check | Green);
+        console("Complete: ", Green | Bold);
+        consoleln("No error message.");
+      }
+
+      consoleSpliter('=', 40);
+
+      /* Run code with all test files */
+      runTest(strReplace("%s/", "%s", binName), fileNameWOExtension, numberOfTest);
     } else {
-      console(" ", Check | Green);
-      console("Complete: ", Green | Bold);
-      consoleln("No error message.");
+      /* Run code with all test files */
+      runTest("", fileNamePath, numberOfTest);
     }
 
-    consoleSpliter('=', 40);
 
-    /* Run code with all test files */
-    runTest(strReplace("%s/", "%s", binName), fileNameWOExtension, numberOfTest);
     consoleln();
 
   } else {

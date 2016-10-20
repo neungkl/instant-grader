@@ -9,4 +9,5 @@ bin/
 test/test
 
 # Other File
+*.hi
 *.o

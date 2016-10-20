@@ -1,0 +1,28 @@
+#include <stdio.h>
+
+/*
+Try run this command:
+./grader ./sampleFile/custom.txt -v -in "###" -out "***" --compile "g++ -Wall -x c -o %prog %code" --run "%prog < %in > %out"
+*/
+
+int main() {
+  int a,b;
+  scanf("%d%d",&a,&b);
+  printf("%d\n", a * b);
+}
+
+/*
+###
+1 1
+***
+1
+###
+2 5
+***
+10
+###
+123 456
+***
+56088
+###
+*/

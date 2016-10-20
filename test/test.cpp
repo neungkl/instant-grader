@@ -2,25 +2,47 @@
 #include "../src/util.h"
 #include <cstring>
 
-void test(char* expect, char* to) {
-  if(strcmp(expect,to) == 0) {
+int sampleCount = 0;
+int passCount = 0;
+
+void showResult(bool pass, const char* to, const char* expect) {
+  if(pass) {
     consoleln(" Pass ", Check | Green | Bold);
-    console("  Except : "); consoleln(expect);
+    console("  Expect : "); consoleln(expect);
+    ++passCount;
   } else {
     consoleln(" Reject ", Cross | Red | Bold);
-    console("  Except : "); consoleln(expect);
+    console("  Expect : "); consoleln(expect);
     console("  Result : "); consoleln(to);
   }
+
+  ++sampleCount;
+}
+
+void test(char* to, char* expect) {
+  showResult(strcmp(to,expect) == 0, to, expect);
+}
+
+void test(bool to, bool expect) {
+  showResult(to == expect, to ? "true" : "false", expect ? "true" : "false");
 }
 
 void header(char* head) {
-  consoleln();
-  consoleSpliter('=');
+  consoleSpliter('=', 50, Grey);
   consoleln(head, Bold);
-  consoleln();
 }
 
 int main() {
+
+  header("Util -> isHeadEqual");
+
+  test(isHeadEqual("aaa", "aaa"), true);
+  test(isHeadEqual("aaa", "aab"), false);
+  test(isHeadEqual("xxx", "xx"), true);
+  test(isHeadEqual("xx", "xxx"), false);
+
+  test(isHeadEqual("123456", "123"), true);
+  test(isHeadEqual("234567", "235"), false);
 
   header("Util -> ToString");
 
@@ -39,6 +61,19 @@ int main() {
 
   test(strReplace("aaa", "a", "xxxxxxxxxx"), "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
   test(strReplace("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", "xxxxxxxxxx", "a"), "aaa");
+
+  header("Util -> CloneConstChar");
+
+  test(cloneConstChar("test"), "test");
+  test(cloneConstChar("123456789123456789123456789123456789"), "123456789123456789123456789123456789");
+
+  consoleSpliter('=', 50, Grey);
+  if(passCount < sampleCount) {
+    console(" Some reject ", Cross | Red | Bold);
+  } else {
+    console(" All pass ", Check | Green | Bold);
+  }
+  printf("(%d/%d)\n", passCount, sampleCount);
 
   consoleln();
 }

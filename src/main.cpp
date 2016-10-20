@@ -13,11 +13,16 @@ void initConfig() {
   setConf(CLI_VERBOSE, false);
 
   // Set compiler command
-  setCompileCmd("c",    "gcc -o %out %in");
-  setCompileCmd("c++",  "g++ -o %out %in");
-  setCompileCmd("java", "javac -d %bin %in");
+  setCompileCmd("c",        "gcc -Wall -o %prog %code");
+  setCompileCmd("c++",      "g++ -Wall -o %prog %code");
+  setCompileCmd("java",     "javac -d %bin %code");
+  setCompileCmd("python",   "");
+  setCompileCmd("haskell",  "ghc -o %prog %code");
+  setCompileCmd("ruby",   "");
 
-  setRunCmd("java", "java -classpath %progd %progx < %in > %out");
+  setRunCmd("java",   "java -classpath %progd %progx < %in > %out");
+  setRunCmd("python", "python %prog < %in > %out");
+  setRunCmd("ruby",   "ruby %prog < %in > %out");
 }
 
 bool readParamter(int &argn, int argc, char** argv) {
@@ -25,6 +30,20 @@ bool readParamter(int &argn, int argc, char** argv) {
 
     if(strcmp(argv[argn], "-v") == 0) {
       setConf(CLI_VERBOSE, true);
+    }
+    else if(strcmp(argv[argn], "-in") == 0) {
+      setConf(TEST_INPUT_DELIMITER, argv[++argn]);
+    }
+    else if(strcmp(argv[argn], "-out") == 0) {
+      setConf(TEST_OUTPUT_DELIMITER, argv[++argn]);
+    }
+    else if(strcmp(argv[argn], "--compile") == 0) {
+      setConf(LANGUAGE, "custom");
+      setCompileCmd("custom", argv[++argn]);
+    }
+    else if(strcmp(argv[argn], "--run") == 0) {
+      setConf(LANGUAGE, "custom");
+      setRunCmd("custom", argv[++argn]);
     }
     else {
       break;

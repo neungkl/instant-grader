@@ -102,7 +102,7 @@ char* toString(int num) {
   @param access access context of the file
   @return FILE pointer
 */
-FILE* createFileHandler(char* fileName, char* access) {
+FILE* createFileHandler(char* fileName, char *access) {
     FILE* handler = fopen(fileName, access);
 
     if(handler == NULL) {
@@ -111,4 +111,17 @@ FILE* createFileHandler(char* fileName, char* access) {
     }
 
     return handler;
+}
+
+/*
+  Allocate new memory for char and copy string from const to memory
+  @param str Const string
+  @return New allocation value
+*/
+char* cloneConstChar(const char* str) {
+  int len = strlen(str);
+  char* res = new char[len + 1];
+  strcpy(res, str);
+  res[len] = '\0';
+  return res;
 }

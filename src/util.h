@@ -10,4 +10,6 @@ char* toString(int);
 
 FILE* createFileHandler(char*, char*);
 
+char* cloneConstChar(const char*);
+
 #endif

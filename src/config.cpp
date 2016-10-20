@@ -1,4 +1,5 @@
 #include "config.h"
+#include "util.h"
 #include <cstring>
 #include <map>
 
@@ -29,7 +30,7 @@ int confi(ConfigProperty key) {
 
 char* conf(ConfigProperty key) {
   auto obj = config.find(key);
-  if(obj == config.end()) return NULL;
+  if(obj == config.end()) return "";
   return obj->second;
 }
 
@@ -43,6 +44,7 @@ char* getCompileCmd(char* key) {
     // Use gcc as default
     return "gcc -o %out %in";
   }
+
   return (char*) obj->second.c_str();
 }
 
@@ -55,6 +57,7 @@ char* getRunCmd(char* key) {
   if(obj == runCmd.end()) {
     return "%prog < %in > %out";
   }
+
   return (char*) obj->second.c_str();
 }
 
@@ -63,12 +66,21 @@ char* getRunCmd(char* key) {
   @param ext extension of file
 */
 void setLanguage(char* ext) {
+
+  if(conf(LANGUAGE) != NULL && strcmp(conf(LANGUAGE), "custom") == 0) return ;
+
   if(strcmp(ext, "c") == 0) {
     setConf(LANGUAGE, "c");
   } else if(strcmp(ext, "cpp") == 0) {
     setConf(LANGUAGE, "c++");
   } else if(strcmp(ext, "java") == 0) {
     setConf(LANGUAGE, "java");
+  } else if(strcmp(ext, "py") == 0) {
+    setConf(LANGUAGE, "python");
+  } else if(strcmp(ext, "hs") == 0) {
+    setConf(LANGUAGE, "haskell");
+  } else if(strcmp(ext, "rb") == 0) {
+    setConf(LANGUAGE, "ruby");
   } else {
     // Use C as defailt language
     setConf(LANGUAGE, "c");
