@@ -20,5 +20,6 @@ void consoleln(const char* = "", int = (White | Normal));
 void consoleSpliter(char, int = DEFAULT_SPLITTER_WIDTH, int = (White | Normal));
 
 void consoleFile(FILE*);
+void consoleHelp();
 
 #endif

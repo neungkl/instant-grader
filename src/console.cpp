@@ -67,3 +67,58 @@ void consoleFile(FILE* file) {
   }
 
 }
+
+/*
+  Console help file
+*/
+void consoleHelp() {
+  console  ("Usage: ", Bold); consoleln("./grader [OPTIONS] script");
+  consoleln("       ./grader script [OPTIONS]");
+
+  consoleln();
+  consoleln("Options:", Bold);
+  consoleln("  -v             Show content in both accepted annd rejected case");
+  consoleln("  -o             Specific execute file path");
+  consoleln("  -b             Specific bin path");
+  consoleln("  -in STR        Input delimiter in script file (default: \"===\")");
+  consoleln("  -out STR       Output delimiter in script file (default: \"---\")");
+  consoleln("  --compile CMD  Custom compile command");
+  consoleln("                 default: \"gcc -o %prog %file\"");
+  consoleln("  --run CMD      Custom run command");
+  consoleln("                 default: \"%prog < %in > %out\"");
+
+  consoleln();
+  consoleln("Options Pattern:", Bold);
+  consoleln("  Some specific options are allow to enter string like %str");
+  consoleln("  to define some specific context while running the grader");
+
+  consoleln();
+  consoleln("  %bin     Bin directory");
+  consoleln("  %code    Script file");
+  consoleln("  %prog    Compiled program (for interpreted language this file not created)");
+  consoleln("  %progx   Compiled program name (only a name not include directory path)");
+  consoleln("  %in      Input test case file");
+  consoleln("  %out     Output file after run case");
+
+  consoleln();
+  consoleln("  Some options are not supported some pattern.");
+  consoleln("  Here a lookup table for available option pattern");
+
+  consoleln();
+  consoleln("             | %bin | %code | %prog | %progx | %in | %out");
+  consoleln("  ----------------------------------------------------------------");
+  consoleln("  -o         |  ✔   |       |       |   ✔    |     |     ");
+  consoleln("  --compile  |  ✔   |   ✔   |   ✔   |        |     |     ");
+  consoleln("  --run      |  ✔   |   ✔   |   ✔   |   ✔    |  ✔  |   ✔ ");
+
+  consoleln();
+  consoleln("  For example:");
+  consoleln("    Java compile : javac -d %bin %code");
+  consoleln("    Java run     : java -classpath %bin %progx < %in > %out");
+  consoleln("    Python run   : python %code < %in > %out");
+
+  consoleln();
+  consoleln("More documentation: https://github.com/neungkl/instant-grader");
+
+  consoleln();
+}

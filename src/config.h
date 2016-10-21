@@ -6,9 +6,9 @@ enum ConfigProperty {
   TEST_OUTPUT_DELIMITER,
   LANGUAGE,
   CLI_VERBOSE,
-  COMPILER_CPP,
-  COMPILER_C,
-  COMPILER_JAVA
+  PROGRAM_PATH,
+  BIN_PATH,
+  HELP
 };
 
 void setConf(ConfigProperty, char*);

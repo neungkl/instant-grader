@@ -11,18 +11,24 @@ void initConfig() {
   setConf(TEST_OUTPUT_DELIMITER,  "---");
 
   setConf(CLI_VERBOSE, false);
+  setConf(HELP, false);
+
+  setConf(BIN_PATH, "./bin");
+  setConf(PROGRAM_PATH, "%bin/%progx");
 
   // Set compiler command
+  setCompileCmd("default",  "gcc -Wall -o %prog %code");
   setCompileCmd("c",        "gcc -Wall -o %prog %code");
   setCompileCmd("c++",      "g++ -Wall -o %prog %code");
   setCompileCmd("java",     "javac -d %bin %code");
   setCompileCmd("python",   "");
   setCompileCmd("haskell",  "ghc -o %prog %code");
-  setCompileCmd("ruby",   "");
+  setCompileCmd("ruby",     "");
 
-  setRunCmd("java",   "java -classpath %progd %progx < %in > %out");
-  setRunCmd("python", "python %prog < %in > %out");
-  setRunCmd("ruby",   "ruby %prog < %in > %out");
+  setRunCmd("default",  "%prog < %in > %out");
+  setRunCmd("java",     "java -classpath %bin %progx < %in > %out");
+  setRunCmd("python",   "python %code < %in > %out");
+  setRunCmd("ruby",     "ruby %code < %in > %out");
 }
 
 bool readParamter(int &argn, int argc, char** argv) {
@@ -44,6 +50,21 @@ bool readParamter(int &argn, int argc, char** argv) {
     else if(strcmp(argv[argn], "--run") == 0) {
       setConf(LANGUAGE, "custom");
       setRunCmd("custom", argv[++argn]);
+    }
+    else if(strcmp(argv[argn], "-o") == 0) {
+      int len = strlen(argv[++argn]);
+
+      // Remove tail /
+      if(argv[argn][len - 1] == '/') argv[argn][len - 1] = '\0';
+      setConf(PROGRAM_PATH, argv[argn]);
+    }
+    else if(strcmp(argv[argn], "-b") == 0) {
+      int len = strlen(argv[++argn]);
+      if(argv[argn][len - 1] == '/') argv[argn][len - 1] = '\0';
+      setConf(BIN_PATH, argv[argn]);
+    }
+    else if(strcmp(argv[argn], "-h") == 0) {
+      setConf(HELP, true);
     }
     else {
       break;
@@ -76,7 +97,9 @@ int main(int argc, char** argv) {
 
     isParamValid = isParamValid && readParamter(argn, argc, argv);
 
-    if(!isParamValid) {
+    if(confi(HELP)) {
+      consoleHelp();
+    } else if(!isParamValid) {
       console(" ", Cross | Red);
       consoleln("argument is invalid.");
     } else if((fileIndex < argc - 1 && argn == argc) || fileIndex == argc - 1) {

@@ -41,8 +41,7 @@ void setCompileCmd(char* key, char* value) {
 char* getCompileCmd(char* key) {
   map<string,string>::iterator obj = compileCmd.find(string(key));
   if(obj == compileCmd.end()) {
-    // Use gcc as default
-    return "gcc -o %out %in";
+    return getCompileCmd("default");
   }
 
   return (char*) obj->second.c_str();
@@ -55,7 +54,7 @@ void setRunCmd(char* key, char* value) {
 char* getRunCmd(char* key) {
   map<string,string>::iterator obj = runCmd.find(string(key));
   if(obj == runCmd.end()) {
-    return "%prog < %in > %out";
+    return getRunCmd("default");
   }
 
   return (char*) obj->second.c_str();

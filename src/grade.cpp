@@ -8,7 +8,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <cstdlib>
-
 #include <cstdio>
 
 char* binName = "./bin";
@@ -44,7 +43,7 @@ int splitTestCase(FILE* pFile) {
     TestOutput
   };
 
-  mkdir("./bin/", 0766);
+  mkdir(strReplace("%bin/", "%bin", binName), 0766);
 
   FileContentState fcState = Code;
   char content[BUFFER_SIZE + 1];
@@ -176,13 +175,10 @@ int compileCode(char* in, char* inx, char* out) {
   @param programFile the executable run file
   @param numberOfTest number of test
 */
-void runTest(char* programPath, char* programName, int numberOfTest) {
+void runTest(char* programFile, char* fileName, char* programName, int numberOfTest) {
   char* fileInputName;
   char* fileAnswerName;
   char* runCommand;
-
-  char* programFile = strReplace("pathname", "path", programPath);
-  programFile = strReplace(programFile, "name", programName);
 
   const int subSplitterWidth = 20;
 
@@ -193,9 +189,10 @@ void runTest(char* programPath, char* programName, int numberOfTest) {
   if(strcmp(getRunCmd(conf(LANGUAGE)), getRunCmd("c")) != 0) {
 
     runCommand = getRunCmd(conf(LANGUAGE));
-    runCommand = strReplace(runCommand, "%progd", programPath);
     runCommand = strReplace(runCommand, "%progx", programName);
     runCommand = strReplace(runCommand, "%prog", programFile);
+    runCommand = strReplace(runCommand, "%code", fileName);
+    runCommand = strReplace(runCommand, "%bin", binName);
 
     consoleln(strReplace("Run with command: %s", "%s", runCommand), Bold);
   }
@@ -210,9 +207,10 @@ void runTest(char* programPath, char* programName, int numberOfTest) {
     console(strReplace("Run case: %d ", "%d", toString(N)));
 
     runCommand = getRunCmd(conf(LANGUAGE));
-    runCommand = strReplace(runCommand, "%progd", programPath);
     runCommand = strReplace(runCommand, "%progx", programName);
     runCommand = strReplace(runCommand, "%prog", programFile);
+    runCommand = strReplace(runCommand, "%code", fileName);
+    runCommand = strReplace(runCommand, "%bin", binName);
     runCommand = strReplace(runCommand, "%in", fileInputName);
     runCommand = strReplace(runCommand, "%out", fileAnswerName);
 
@@ -294,6 +292,9 @@ GraderStatus gradeFile(char* fileNamePath) {
 
     int numberOfTest = 0;
 
+    /* Init config */
+    binName = conf(BIN_PATH);
+
     /* Extract content to individual file */
     numberOfTest = splitTestCase(pFile);
     fclose(pFile);
@@ -304,15 +305,17 @@ GraderStatus gradeFile(char* fileNamePath) {
 
     setLanguage(extension);
 
-    /* Compile the code */
-    char* programFileName = strReplace("%bin/%s", "%bin", binName);
-
     consoleln();
+
+    char* programFileName = new char[1];
+    programFileName[0] = '\0';
 
     // Compile when there has compile message
     if(strcmp(getCompileCmd(conf(LANGUAGE)),"") != 0) {
 
-      programFileName = strReplace(programFileName, "%s", fileNameWOExtension);
+      /* Compile the code */
+      programFileName = strReplace(conf(PROGRAM_PATH), "%bin", binName);
+      programFileName = strReplace(programFileName, "%progx", fileNameWOExtension);
 
       int compileStatus = compileCode(fileNamePath, fileNameWOExtension, programFileName);
 
@@ -325,14 +328,10 @@ GraderStatus gradeFile(char* fileNamePath) {
       }
 
       consoleSpliter('=', 40);
-
-      /* Run code with all test files */
-      runTest(strReplace("%s/", "%s", binName), fileNameWOExtension, numberOfTest);
-    } else {
-      /* Run code with all test files */
-      runTest("", fileNamePath, numberOfTest);
     }
 
+    /* Run code with all test files */
+    runTest(programFileName, fileNamePath, fileNameWOExtension, numberOfTest);
 
     consoleln();
 
