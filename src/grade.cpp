@@ -197,6 +197,11 @@ void runTest(char* programFile, char* fileName, char* programName, int numberOfT
     consoleln(strReplace("Run with command: %s", "%s", runCommand), Bold);
   }
 
+  if(numberOfTest == 0) {
+    consoleln("No test case to run.");
+    consoleln("Finish");
+  }
+
   for(int N = 1; N <= numberOfTest; ++N) {
     fileInputName = strReplace(binFileInput, "%bin", binName);
     fileInputName = strReplace(fileInputName, "%d", toString(N));
