@@ -1,7 +1,7 @@
 Instant Grader CLI
 ========================
 
-A tools for grading your code and test subject which is on the same file.
+A tools for grading your code and test subject which is on the single file.
 
 No need to create a new file for test subject just put in the same file where you code.
 The instant grader automatically split your code file to an individual test case.
