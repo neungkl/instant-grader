@@ -1,6 +1,6 @@
-# Build File
+# Dev File
 build
-grader-build
+grader-dev
 
 # Bin File
 bin/

@@ -72,12 +72,12 @@ void consoleFile(FILE* file) {
   Console help file
 */
 void consoleHelp() {
-  console  ("Usage: ", Bold); consoleln("./grader [OPTIONS] script");
-  consoleln("       ./grader script [OPTIONS]");
+  console  ("Usage: ", Bold); consoleln("./grader [OPTIONS] YOUR_FILE");
+  consoleln("       ./grader YOUR_FILE [OPTIONS]");
 
   consoleln();
   consoleln("Options:", Bold);
-  consoleln("  -v             Show content in both accepted annd rejected case");
+  consoleln("  -v             Show content in both accepted and rejected case");
   consoleln("  -o             Specific execute file path");
   consoleln("  -b             Specific bin path");
   consoleln("  -in STR        Input delimiter in script file (default: \"===\")");
@@ -94,7 +94,7 @@ void consoleHelp() {
 
   consoleln();
   consoleln("  %bin     Bin directory");
-  consoleln("  %code    Script file");
+  consoleln("  %code    Your code file");
   consoleln("  %prog    Compiled program (for interpreted language this file not created)");
   consoleln("  %progx   Compiled program name (only a name not include directory path)");
   consoleln("  %in      Input test case file");
