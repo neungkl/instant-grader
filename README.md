@@ -103,7 +103,7 @@ Note: `%in` and `%out` option is individual file for each test case.<br>
 #### Option Pattern Scope
 
 Some pattern not allow in some option.<br>
-When you customize `--compile CMD`. You can use `%in` `%out` pattern.
+When you customize `--compile CMD`. You can't use `%in` `%out` pattern.
 
 |            | %bin | %code | %prog | %progx | %in | %out |
 | -----------|:----:|:-----:|:-----:|:------:|:---:|:----:|
@@ -239,12 +239,12 @@ $ make test
 
 ### Platform support
 
-Instant grader is support in Linux platform. Maybe Windows in future.<br>
+Instant grader is supported in Linux platform. Maybe Windows in future.<br>
 But currently, Windows is not supported.
 
 ### Language support & Prerequire
 
-You NEED to install compiler of each language before use instant grader.
+You NEED to install compiler of each language before using instant grader.
 But NO setting for compile and run message.
 
 - C (require gcc)
