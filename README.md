@@ -109,10 +109,10 @@ When you customize `--compile CMD`. You can't use `%in` `%out` pattern.
 
 |            | %bin | %code | %prog | %progx | %in | %out |
 | -----------|:----:|:-----:|:-----:|:------:|:---:|:----:|
-| -o         |  ✔   |       |       |   ✔    |     |      |
-| --compile  |  ✔   |   ✔   |   ✔   |        |     |      |
-| --run      |  ✔   |   ✔   |   ✔   |   ✔    |  ✔  |   ✔  |
-✔ Can use
+| -o         |  Y   |       |       |   Y    |     |      |
+| --compile  |  Y   |   Y   |   Y   |        |     |      |
+| --run      |  Y   |   Y   |   Y   |   Y    |  Y  |   Y  |
+Y Can use
 
 Example:
 - `--compile "gcc -o %prog %file"` Correct.
