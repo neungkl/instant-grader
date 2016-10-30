@@ -244,7 +244,7 @@ $ make test
 Instant grader is supported in Linux platform. Maybe Windows in future.<br>
 But currently, Windows is not supported.
 
-### Language support & Prerequire
+### Language support & Prerequisites
 
 You NEED to install compiler of each language before using instant grader.
 But NO setting for compile and run message.
