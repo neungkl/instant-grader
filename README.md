@@ -3,6 +3,8 @@ Instant Grader CLI
 
 A tools for grading your code and test subject which is on the single file.
 
+[![Demo Doccou alpha](https://j.gifs.com/76nKv8.gif)](https://www.youtube.com/watch?v=9b4syW3GWWk)
+
 No need to create a new file for test subject just put in the same file where you code.
 The instant grader automatically split your code file to an individual test case.
 Compile the file and run every test case. Then show the result to you.
@@ -107,10 +109,10 @@ When you customize `--compile CMD`. You can't use `%in` `%out` pattern.
 
 |            | %bin | %code | %prog | %progx | %in | %out |
 | -----------|:----:|:-----:|:-----:|:------:|:---:|:----:|
-| -o         |  ✔   |       |       |   ✔    |     |      |
-| --compile  |  ✔   |   ✔   |   ✔   |        |     |      |
-| --run      |  ✔   |   ✔   |   ✔   |   ✔    |  ✔  |   ✔  |
-✔ Can use
+| -o         |  Y   |       |       |   Y    |     |      |
+| --compile  |  Y   |   Y   |   Y   |        |     |      |
+| --run      |  Y   |   Y   |   Y   |   Y    |  Y  |   Y  |
+Y Can use
 
 Example:
 - `--compile "gcc -o %prog %file"` Correct.
@@ -242,7 +244,7 @@ $ make test
 Instant grader is supported in Linux platform. Maybe Windows in future.<br>
 But currently, Windows is not supported.
 
-### Language support & Prerequire
+### Language support & Prerequisites
 
 You NEED to install compiler of each language before using instant grader.
 But NO setting for compile and run message.
