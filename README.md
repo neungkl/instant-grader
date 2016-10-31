@@ -123,15 +123,15 @@ Example:
 
 Currently tools are support 6 languages. (C, C++, Java, Python, Ruby, Haskell)<br>
 If you need more language you can customize via `--compile` and `--run` option.<br>
-Even customize delimiter for test case in your file can edit via `-in` and `-out` <br>
+Even more, customize delimiter for test case in your file can edit via `-in` and `-out` <br>
 
-There are some sample file in `samepleFile` directory provide some basic stuff.
-And some sample test case in each file. Also include a file with stack overflow behavior
-you can test it with instant grader to see what its result look like.
+There are some sample file in `sampleFile` directory provide some basic stuff.
+And some sample test case in each file. Also include a file with stack overflow behavior.
+You can test it and play along with instant grader to see what its result look like.
 
 #### Here a list of useful command
 
-Multi-language support (depend on extension of file). No need to configure anything.
+- Multi-language support (depend on extension of file). No need to configure anything.
 
 ```sh
 $ ./grader code.c
@@ -142,32 +142,32 @@ $ ./grader code.py
 $ ./grader code.rb
 ```
 
-Verbose mode (Completely show all content in each test case).
+- Verbose mode (Completely show all content in each test case).
 
 ```sh
 $ ./grader code.cpp -v
 ```
 
-Customize gcc compile with optimization level 3.
+- Customize gcc compile with optimization level 3.
 
 ```sh
 $ ./grader code.c --compile "gcc -O3 -Wall -o %prog %code"
 ```
 
-Export compiled program.
+- Export compiled program.
 
 ```sh
 $ ./grader code.c -o code
 $ ./grader code.c -o code --compile "gcc -O3 -Wall -o %prog %code"
 ```
 
-Customize bin path
+- Customize bin path
 
 ```sh
 $ ./grader code.cpp -b tmp/
 ```
 
-Customize delimieter
+- Customize delimieter
 
 ```cpp
 #include <cstdio>
@@ -196,7 +196,7 @@ $ ./grader code.cpp -in "##" -out "++"
 $ ./grader code.cpp -in "#" -out "+"
 ```
 
-Grade with Python file<br>
+- Grade with Python file<br>
 (Program currently support Python.
   No need to specific compile and run option.
   This is just example)
@@ -205,13 +205,13 @@ Grade with Python file<br>
 $ ./grader code.py --compile "" --run "python %code < %in > %out"
 ```
 
-Grade with Java file
+- Grade with Java file
 
 ```sh
 $ ./grader code.java --compile "javac -d %bin %code" --run "java -classpath %bin %progx < %in > %out"
 ```
 
-Multi combination
+- Multi combination
 
 ```sh
 $ ./grader code.cpp -v -b tmp/ -o mycode --compile "g++ -Wall -O3 -o %prog %code" --run "%prog < %in > %out"
@@ -219,7 +219,7 @@ $ ./grader code.cpp -v -b tmp/ -o mycode --compile "g++ -Wall -O3 -o %prog %code
 
 ## Build
 
-For own customization. Here how to build the instant grader;
+For own customization. Here how to build the instant grader
 
 ```sh
 $ make build
@@ -255,6 +255,7 @@ But NO setting for compile and run message.
 - Haskell (require ghc)
 
 If you using another language you can specific by `--compile` and `--run` option.
+Remember to install necessary compiler before runs instant grader.
 
 ## Author
 
