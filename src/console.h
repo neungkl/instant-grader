@@ -1,5 +1,5 @@
 #ifndef console_h
-#define consele_h
+#define console_h
 
 #include "global.h"
 #include <cstdio>

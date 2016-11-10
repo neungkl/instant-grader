@@ -36,10 +36,11 @@ int main() {
 ## Usage
 
 1. Clone this project.
-2. Copy the `grader` file in root directory.
-3. Paste to the same directory of you code. (Anywhere you want)
-4. Run instant grader. (command below)
-5. Done.
+2. Copy the `grader-xxx` file in root directory where `xxx` is your platform.
+3. Rename the `grader-xxx` to `grader`
+4. Paste to the same directory of you code. (Anywhere you want)
+5. Run instant grader. (command below)
+6. Done.
 
 ```sh
 $ ./grader YOUR_FILE
@@ -241,7 +242,7 @@ $ make test
 
 ### Platform support
 
-Instant grader is supported in Linux platform. Maybe Windows in future.<br>
+Instant grader is supported in Linux and MacOS platform. Maybe Windows in future.<br>
 But currently, Windows is not supported.
 
 ### Language support & Prerequisites
