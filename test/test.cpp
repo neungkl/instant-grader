@@ -84,6 +84,7 @@ int main() {
   consoleln();
 
   test(true, false);
+  test(false, true);
 
   if(!isAllPass) {
     throw std::runtime_error("Test Not Pass.");
