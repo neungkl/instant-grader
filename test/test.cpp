@@ -1,11 +1,17 @@
 #include "../src/console.h"
 #include "../src/util.h"
 #include <cstring>
+#include <stdexcept>
 
 int sampleCount = 0;
 int passCount = 0;
 
+int isAllPass = true;
+
 void showResult(bool pass, const char* to, const char* expect) {
+
+  isAllPass = isAllPass && pass;
+
   if(pass) {
     consoleln(" Pass ", Check | Green | Bold);
     console("  Expect : "); consoleln(expect);
@@ -19,7 +25,7 @@ void showResult(bool pass, const char* to, const char* expect) {
   ++sampleCount;
 }
 
-void test(char* to, char* expect) {
+void testc(char* to, char* expect) {
   showResult(strcmp(to,expect) == 0, to, expect);
 }
 
@@ -46,26 +52,26 @@ int main() {
 
   header("Util -> ToString");
 
-  test(toString(0), "0");
-  test(toString(1), "1");
-  test(toString(555), "555");
-  test(toString(123456789), "123456789");
+  testc(toString(0), "0");
+  testc(toString(1), "1");
+  testc(toString(555), "555");
+  testc(toString(123456789), "123456789");
 
   header("Util -> StrReplace");
 
-  test(strReplace("aaabbbccc", "aaa", "ddd"), "dddbbbccc");
-  test(strReplace("abcabcabc", "a", "d"), "dbcdbcdbc");
-  test(strReplace("abcabcabc", "abc", "x"), "xxx");
+  testc(strReplace("aaabbbccc", "aaa", "ddd"), "dddbbbccc");
+  testc(strReplace("abcabcabc", "a", "d"), "dbcdbcdbc");
+  testc(strReplace("abcabcabc", "abc", "x"), "xxx");
 
-  test(strReplace("aaaaaaaaaaaaa", "aaaaa", "x"), "xxaaa");
+  testc(strReplace("aaaaaaaaaaaaa", "aaaaa", "x"), "xxaaa");
 
-  test(strReplace("aaa", "a", "xxxxxxxxxx"), "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-  test(strReplace("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", "xxxxxxxxxx", "a"), "aaa");
+  testc(strReplace("aaa", "a", "xxxxxxxxxx"), "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+  testc(strReplace("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", "xxxxxxxxxx", "a"), "aaa");
 
   header("Util -> CloneConstChar");
 
-  test(cloneConstChar("test"), "test");
-  test(cloneConstChar("123456789123456789123456789123456789"), "123456789123456789123456789123456789");
+  testc(cloneConstChar("test"), "test");
+  testc(cloneConstChar("123456789123456789123456789123456789"), "123456789123456789123456789123456789");
 
   consoleSpliter('=', 50, Grey);
   if(passCount < sampleCount) {
@@ -76,4 +82,10 @@ int main() {
   printf("(%d/%d)\n", passCount, sampleCount);
 
   consoleln();
+
+  test(true, false);
+
+  if(!isAllPass) {
+    throw std::runtime_error("Test Not Pass.");
+  }
 }
