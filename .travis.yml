@@ -3,10 +3,13 @@ language: cpp
 os:
   - linux
 
-install:
-  - sudo apt-get update
-  - sudo apt-get install g++-5
-  - g++ --version
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-5
+    - g++-5
 
 script:
   - make build
