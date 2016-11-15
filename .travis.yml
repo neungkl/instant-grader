@@ -1,15 +1,8 @@
 dist: trusty
 
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - gcc-5
-    - g++-5
-
-install:
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-5" CC="gcc-5"; fi
+compiler:
+  - g++-5
+  - gcc-5
 
 before_script:
   - g++ --version
