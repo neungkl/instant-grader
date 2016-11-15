@@ -1,6 +1,8 @@
 Instant Grader CLI
 ========================
 
+[![Build Status](https://travis-ci.org/neungkl/instant-grader-cli.svg?branch=master)](https://travis-ci.org/neungkl/instant-grader-cli)
+
 A tools for grading your code and test subject which is on the single file.
 
 [![Demo Doccou alpha](https://j.gifs.com/76nKv8.gif)](https://www.youtube.com/watch?v=9b4syW3GWWk)

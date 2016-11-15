@@ -87,6 +87,7 @@ int main() {
   test(false, true);
 
   if(!isAllPass) {
-    throw std::runtime_error("Test Not Pass.");
+    return 1;
   }
+  return 0;
 }
