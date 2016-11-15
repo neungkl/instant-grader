@@ -83,9 +83,6 @@ int main() {
 
   consoleln();
 
-  test(true, false);
-  test(false, true);
-
   if(!isAllPass) {
     return 1;
   }
