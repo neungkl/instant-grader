@@ -1,7 +1,3 @@
-language: cpp
-compiler:
-  - g++
-  - gcc
 script:
   - make build
   - make test
