@@ -1,5 +1,5 @@
 CC := g++
-CFLAGS := -g -Wno-write-strings
+CFLAGS := -g -Wno-write-strings -std=c++11
 TARGET := ./build
 SOURCE := ./src
 TEST := ./test
