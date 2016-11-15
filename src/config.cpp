@@ -1,6 +1,6 @@
 #include "config.h"
 #include "util.h"
-#include <string>
+#include <string.h>
 #include <map>
 
 using namespace std;
