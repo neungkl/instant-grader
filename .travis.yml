@@ -1,15 +1,12 @@
-language: cpp
+sudo: required
 
-os:
-  - linux
+install:
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update
+  - sudo apt-get install g++-5
 
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - gcc-5
-    - g++-5
+before_script:
+  - g++ --version
 
 script:
   - make build
