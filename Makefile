@@ -12,6 +12,7 @@ OBJS := $(patsubst $(SOURCE)/%.cpp,$(TARGET)/%.o,$(SRCS))
 build: prepareBuild all
 
 prepareBuild:
+	@echo $(CXX)
 	$(eval OUTPUT_NAME = $(BUILD_NAME))
 
 all: mkdir bundle
@@ -22,17 +23,17 @@ mkdir:
 	@mkdir -p $(TARGET)/
 
 bundle: $(OBJS)
-	@$(CC) $(CFLAGS) $^ -o $(OUTPUT_NAME)
+	@$(CXX) $(CFLAGS) $^ -o $(OUTPUT_NAME)
 
 $(TARGET)/%.o: $(SOURCE)/%.cpp
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CXX) $(CFLAGS) -c $< -o $@
 
 clean:
 	@rm -rf $(TARGET) *.o
 
 test: $(filter-out $(TARGET)/main.o, $(OBJS))
-	@$(CC) $(CFLAGS) -c $(TEST)/test.cpp -o $(TEST)/test.o
-	@$(CC) $(CFLAGS) $^ $(TEST)/test.o -o $(TEST)/test
+	@$(CXX) $(CFLAGS) -c $(TEST)/test.cpp -o $(TEST)/test.o
+	@$(CXX) $(CFLAGS) $^ $(TEST)/test.o -o $(TEST)/test
 	@$(TEST)/test
 	@rm $(TEST)/test.o
 

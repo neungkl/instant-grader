@@ -1,6 +1,4 @@
 sudo: required
-language: cpp
-compiler: gcc
 
 before_install:
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
