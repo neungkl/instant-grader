@@ -12,7 +12,6 @@ OBJS := $(patsubst $(SOURCE)/%.cpp,$(TARGET)/%.o,$(SRCS))
 build: prepareBuild all
 
 prepareBuild:
-	@echo $(CXX)
 	$(eval OUTPUT_NAME = $(BUILD_NAME))
 
 all: mkdir bundle
