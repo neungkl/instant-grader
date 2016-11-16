@@ -1,4 +1,4 @@
-CC := g++
+CXX ?= g++
 CFLAGS := -g -Wno-write-strings -std=c++11
 TARGET := ./build
 SOURCE := ./src
