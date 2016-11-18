@@ -5,7 +5,9 @@ Instant Grader CLI
 
 A tools for grading your code and test subject which is on the single file.
 
-[![Demo Doccou alpha](https://j.gifs.com/76nKv8.gif)](https://www.youtube.com/watch?v=9b4syW3GWWk)
+<img src="preview.png" width="600">
+
+Video demo here : [Youtube](https://www.youtube.com/watch?v=9b4syW3GWWk)
 
 No need to create a new file for test subject just put in the same file where you code.
 The instant grader automatically split your code file to an individual test case.

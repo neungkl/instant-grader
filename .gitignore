@@ -12,3 +12,5 @@ test/test
 # Other File
 *.hi
 *.o
+
+.DS_Store
