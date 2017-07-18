@@ -17,18 +17,18 @@ void initConfig() {
   setConf(PROGRAM_PATH, "%bin/%progx");
 
   // Set compiler command
-  setCompileCmd("default",  "gcc -Wall -o %prog %code");
-  setCompileCmd("c",        "gcc -Wall -o %prog %code");
-  setCompileCmd("c++",      "g++ -Wall -o %prog %code");
-  setCompileCmd("java",     "javac -d %bin %code");
+  setCompileCmd("default",  "gcc -Wall -o \"%prog\" \"%code\"");
+  setCompileCmd("c",        "gcc -Wall -o \"%prog\" \"%code\"");
+  setCompileCmd("c++",      "g++ -Wall -o \"%prog\" \"%code\"");
+  setCompileCmd("java",     "javac -d \"%bin\" \"%code\"");
   setCompileCmd("python",   "");
-  setCompileCmd("haskell",  "ghc -o %prog %code");
+  setCompileCmd("haskell",  "ghc -o \"%prog\" \"%code\"");
   setCompileCmd("ruby",     "");
 
-  setRunCmd("default",  "%prog < %in > %out");
-  setRunCmd("java",     "java -classpath %bin %progx < %in > %out");
-  setRunCmd("python",   "python %code < %in > %out");
-  setRunCmd("ruby",     "ruby %code < %in > %out");
+  setRunCmd("default",  "\"%prog\" < \"%in\" > \"%out\"");
+  setRunCmd("java",     "java -classpath \"%bin\" \"%progx\" < \"%in\" > \"%out\"");
+  setRunCmd("python",   "python \"%code\" < \"%in\" > \"%out\"");
+  setRunCmd("ruby",     "ruby \"%code\" < \"%in\" > \"%out\"");
 }
 
 bool readParamter(int &argn, int argc, char** argv) {
