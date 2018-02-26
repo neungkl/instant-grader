@@ -16,7 +16,7 @@ prepareBuild:
 
 all: mkdir bundle
 	@echo "Build Finish.\nRun the program by typing.";
-	@echo "\033[1m./$(OUTPUT_NAME) add.cpp"
+	@echo "\033[1m./build/$(OUTPUT_NAME) add.cpp"
 
 mkdir:
 	@mkdir -p $(TARGET)/

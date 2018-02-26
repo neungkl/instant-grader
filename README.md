@@ -37,7 +37,16 @@ int main() {
 */
 ```
 
-## Usage
+## Installation
+
+For MacOS user:
+
+```sh
+brew tap neungkl/instant-grader
+brew install instant-grader
+```
+
+For Windows and Linux user:
 
 1. Clone this project.
 2. Build file `make build`
@@ -45,7 +54,7 @@ int main() {
 5. Run instant grader.
 
 ```sh
-$ ./grader YOUR_FILE
+$ ./build/instant-grader YOUR_FILE
 ```
 
 6. Done.
@@ -58,17 +67,17 @@ you can customize mostly thing you want in this tools.
 ### Command
 
 ```sh
-$ ./grader [OPTIONS] YOUR_CODE
-$ ./grader YOUR_CODE [OPTIONS]
+$ instant-grader [OPTIONS] YOUR_CODE
+$ instant-grader YOUR_CODE [OPTIONS]
 
 # show help documentation
-$ ./grader -h
+$ instant-grader -h
 ```
 
 ### Options
 
 You can add some parameters to grader.<br>
-Something like `./grader -v`
+Something like `instant-grader -v`
 for expose all accepted subject and rejected subject.
 
 | Option        | Description   | Default |
@@ -141,37 +150,37 @@ You can test it and play along with instant grader to see what its result look l
 - Multi-language support (depend on extension of file). No need to configure anything.
 
 ```sh
-$ ./grader code.c
-$ ./grader code.cpp
-$ ./grader code.hs
-$ ./grader code.java
-$ ./grader code.py
-$ ./grader code.rb
+$ instant-grader code.c
+$ instant-grader code.cpp
+$ instant-grader code.hs
+$ instant-grader code.java
+$ instant-grader code.py
+$ instant-grader code.rb
 ```
 
 - Verbose mode (Completely show all content in each test case).
 
 ```sh
-$ ./grader code.cpp -v
+$ instant-grader code.cpp -v
 ```
 
 - Customize gcc compile with optimization level 3.
 
 ```sh
-$ ./grader code.c --compile "gcc -O3 -Wall -o %prog %code"
+$ instant-grader code.c --compile "gcc -O3 -Wall -o %prog %code"
 ```
 
 - Export compiled program.
 
 ```sh
-$ ./grader code.c -o code
-$ ./grader code.c -o code --compile "gcc -O3 -Wall -o %prog %code"
+$ instant-grader code.c -o code
+$ instant-grader code.c -o code --compile "gcc -O3 -Wall -o %prog %code"
 ```
 
 - Customize bin path
 
 ```sh
-$ ./grader code.cpp -b tmp/
+$ instant-grader code.cpp -b tmp/
 ```
 
 - Customize delimieter
@@ -198,9 +207,9 @@ int main() {
 ```
 
 ```sh
-$ ./grader code.cpp -in "###" -out "+++"
-$ ./grader code.cpp -in "##" -out "++"
-$ ./grader code.cpp -in "#" -out "+"
+$ instant-grader code.cpp -in "###" -out "+++"
+$ instant-grader code.cpp -in "##" -out "++"
+$ instant-grader code.cpp -in "#" -out "+"
 ```
 
 - Grade with Python file<br>
@@ -209,19 +218,19 @@ $ ./grader code.cpp -in "#" -out "+"
   This is just example)
 
 ```sh
-$ ./grader code.py --compile "" --run "python %code < %in > %out"
+$ instant-grader code.py --compile "" --run "python %code < %in > %out"
 ```
 
 - Grade with Java file
 
 ```sh
-$ ./grader code.java --compile "javac -d %bin %code" --run "java -classpath %bin %progx < %in > %out"
+$ instant-grader code.java --compile "javac -d %bin %code" --run "java -classpath %bin %progx < %in > %out"
 ```
 
 - Multi combination
 
 ```sh
-$ ./grader code.cpp -v -b tmp/ -o mycode --compile "g++ -Wall -O3 -o %prog %code" --run "%prog < %in > %out"
+$ instant-grader code.cpp -v -b tmp/ -o mycode --compile "g++ -Wall -O3 -o %prog %code" --run "%prog < %in > %out"
 ```
 
 ## Build

@@ -87,7 +87,7 @@ int main(int argc, char** argv) {
     console("", Cross | Red);
     consoleln(" Please enter specific file to run test.");
     console("  For Example: ");
-    consoleln("./grader add.cpp", Bold);
+    consoleln("instant-grader add.cpp", Bold);
   } else {
     int isParamValid = true;
 
