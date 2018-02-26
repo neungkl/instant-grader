@@ -3,8 +3,8 @@ CFLAGS := -g -Wno-write-strings -std=c++11
 TARGET := ./build
 SOURCE := ./src
 TEST := ./test
-OUTPUT_NAME := grader-dev
-BUILD_NAME := grader
+OUTPUT_NAME := instant-grader-dev
+BUILD_NAME := instant-grader
 
 SRCS := $(wildcard $(SOURCE)/*.cpp)
 OBJS := $(patsubst $(SOURCE)/%.cpp,$(TARGET)/%.o,$(SRCS))
@@ -23,6 +23,7 @@ mkdir:
 
 bundle: $(OBJS)
 	@$(CXX) $(CFLAGS) $^ -o $(OUTPUT_NAME)
+	@mv $(OUTPUT_NAME) $(TARGET)
 
 $(TARGET)/%.o: $(SOURCE)/%.cpp
 	@$(CXX) $(CFLAGS) -c $< -o $@
