@@ -4,16 +4,31 @@
 #include <stdexcept>
 #include <cstring>
 
+#include <cstdio>
+#ifdef WINDOWS
+  #include <windows.h>
+#else
+  #include <cstdlib>
+#endif
+#define PATH_LEN 512
+
 using namespace std;
 
+char binPath[PATH_LEN];
+char currentPath[PATH_LEN];
+
 void initConfig() {
+
   setConf(TEST_INPUT_DELIMITER,   "===");
   setConf(TEST_OUTPUT_DELIMITER,  "---");
 
   setConf(CLI_VERBOSE, false);
   setConf(HELP, false);
 
-  setConf(BIN_PATH, "./bin");
+  sprintf(binPath, "%s/bin", currentPath);
+  binPath[sizeof(binPath) - 1] = '\0';
+
+  setConf(BIN_PATH, binPath);
   setConf(PROGRAM_PATH, "%bin/%progx");
 
   // Set compiler command
@@ -77,6 +92,27 @@ bool readParamter(int &argn, int argc, char** argv) {
 }
 
 int main(int argc, char** argv) {
+
+  char slashChr = '\\';
+
+  #ifdef WINDOWS
+    GetFullPathName(__FILE__, currentPath, PATH_LEN);
+  #else
+    realpath(__FILE__, currentPath);
+    slashChr = '/';
+  #endif
+
+  if (strlen(currentPath) == 0)
+  {
+    console(" ", Cross | Red);
+    consoleln("Can't get current directory of grader");
+    return -1;
+  }
+
+  char *lastSlash = strrchr(currentPath, slashChr);
+  *lastSlash = '\0';
+  lastSlash = strrchr(currentPath, slashChr);
+  *lastSlash = '\0';
 
   initConfig();
 

@@ -103,14 +103,14 @@ char* toString(int num) {
   @return FILE pointer
 */
 FILE* createFileHandler(char* fileName, char *access) {
-    FILE* handler = fopen(fileName, access);
+  FILE* handler = fopen(fileName, access);
 
-    if(handler == NULL) {
-      perror("fopen");
-      throw std::runtime_error(strReplace("%s can't open.", "%s", fileName));
-    }
+  if(handler == NULL) {
+    perror("fopen");
+    throw std::runtime_error(strReplace("%s can't open.", "%s", fileName));
+  }
 
-    return handler;
+  return handler;
 }
 
 /*
