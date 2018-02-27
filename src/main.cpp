@@ -60,10 +60,12 @@ bool readParamter(int &argn, int argc, char** argv) {
     }
     else if(strcmp(argv[argn], "--compile") == 0) {
       setConf(LANGUAGE, "custom");
+      setConf(BIN_PATH, "./bin");
       setCompileCmd("custom", argv[++argn]);
     }
     else if(strcmp(argv[argn], "--run") == 0) {
       setConf(LANGUAGE, "custom");
+      setConf(BIN_PATH, "./bin");
       setRunCmd("custom", argv[++argn]);
     }
     else if(strcmp(argv[argn], "-o") == 0) {
@@ -91,8 +93,7 @@ bool readParamter(int &argn, int argc, char** argv) {
   return true;
 }
 
-int main(int argc, char** argv) {
-
+void initCurrentDirectory() {
   char slashChr = '\\';
 
   #ifdef WINDOWS
@@ -102,17 +103,24 @@ int main(int argc, char** argv) {
     slashChr = '/';
   #endif
 
-  if (strlen(currentPath) == 0)
-  {
-    console(" ", Cross | Red);
-    consoleln("Can't get current directory of grader");
-    return -1;
-  }
+  if (strlen(currentPath) == 0) return;
 
   char *lastSlash = strrchr(currentPath, slashChr);
   *lastSlash = '\0';
   lastSlash = strrchr(currentPath, slashChr);
   *lastSlash = '\0';
+}
+
+int main(int argc, char** argv) {
+
+  initCurrentDirectory();
+
+  if (strlen(currentPath) == 0)
+  {
+    console(" ", Cross | Red);
+    consoleln("Can't get current directory of grader");
+    return -1;
+  }  
 
   initConfig();
 

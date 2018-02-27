@@ -2,7 +2,7 @@
 
 /*
 Try run this command:
-./grader ./sampleFile/custom.txt -v -in "###" -out "***" --compile "g++ -Wall -x c -o %prog %code" --run "%prog < %in > %out"
+instant-grader ./sampleFile/custom.txt -v -in "###" -out "***" --compile "g++ -Wall -x c -o %prog %code" --run "%prog < %in > %out"
 */
 
 int main() {

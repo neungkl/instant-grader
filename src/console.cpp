@@ -72,8 +72,8 @@ void consoleFile(FILE* file) {
   Console help file
 */
 void consoleHelp() {
-  console  ("Usage: ", Bold); consoleln("./grader [OPTIONS] YOUR_FILE");
-  consoleln("       ./grader YOUR_FILE [OPTIONS]");
+  console  ("Usage: ", Bold); consoleln("instant-grader [OPTIONS] YOUR_FILE");
+  consoleln("       instant-grader YOUR_FILE [OPTIONS]");
 
   consoleln();
   consoleln("Options:", Bold);
@@ -83,7 +83,7 @@ void consoleHelp() {
   consoleln("  -in STR        Input delimiter in script file (default: \"===\")");
   consoleln("  -out STR       Output delimiter in script file (default: \"---\")");
   consoleln("  --compile CMD  Custom compile command");
-  consoleln("                 default: \"gcc -o %prog %file\"");
+  consoleln("                 default: \"gcc -o %prog %code\"");
   consoleln("  --run CMD      Custom run command");
   consoleln("                 default: \"%prog < %in > %out\"");
 

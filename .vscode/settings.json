@@ -1,5 +1,7 @@
 {
   "files.associations": {
-    "cstdio": "cpp"
+    "cstdio": "cpp",
+    "__locale": "cpp",
+    "ios": "cpp"
   }
 }
